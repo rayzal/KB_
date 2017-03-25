@@ -1,0 +1,213 @@
+DOMAINS   
+nama,jender,pekerjaan,benda,alasan,zat = symbol 
+** pendeklarasian nama,jender,pekerjaan,benda,alasan,zat merupakan nama domain bertipe data symbol
+umur=integer
+** pendeklarasian umur merupakan nama domain bertipe data integer
+
+PREDICATES
+nondeterm orang(nama, umur, jender, pekerjaan)
+** pendeklarasian predicate orang dengan dengan argumen dari domain nama,umur, jender, pekerjaan
+
+nondeterm selingkuh(nama, nama)
+** pendeklarasian predicate selingkuh dengan dengan argumen dari domain nama,nama
+
+terbunuh_dengan(nama, benda)
+** pendeklarasian predicate terbunuh_dengan dengan dengan argumen dari domain nama,benda
+
+terbunuh(nama)
+** pendeklarasian predicate terbunuh dengan argumen dari domain nama
+
+nondeterm pembunuh(nama)
+** pendeklarasian predicate pembunuh dengan argumen dari domain nama
+
+motif(alasan)
+** pendeklarasian predicate motif dengan argumen dari domain alasan
+
+ternodai(nama,zat)
+** pendeklarasian predicate ternodai dengan argumen dari domain nama,zat
+
+milik(nama, benda)
+** pendeklarasian predicate milik dengan argumen dari domain nama, benda
+
+nondeterm cara_kerja_mirip(benda, benda)
+** pendeklarasian predicate cara_kerja_mirip dengan argumen dari domain benda, benda
+
+nondeterm kemungkinan_milik(nama, benda)
+** pendeklarasian predicate kemungkinan_milik dengan argumen dari domain nama, benda
+
+nondeterm dicurigai(nama)
+** pendeklarasian predicate dicurigai dengan argumen dari domain nama
+
+/* * * Fakta-fakta tentang pembunuhan * * */ 
+CLAUSES 
+  orang(budi,55,m,tukang_kayu).
+  ** klausa fakta orang dengan nama budi, umur 55, jender m, pekerjaan tukang kayu
+
+  orang(aldi,25,m,pemain_sepak_bola).   
+  ** klausa fakta orang dengan nama aldi, umur 25, jender m, pekerjaan pemain sepakbola
+
+  orang(aldi,25,m,tukang_jagal).  
+  ** klausa fakta orang dengan nama aldi, umur 25, jender m, pekerjaan tukang jagal
+
+   orang(joni,25,m,pencopet). 
+  ** klausa fakta orang dengan nama joni, umur 25, jender m, pekerjaan pencopet
+ 
+  selingkuh(ina,joni).
+  ** klausa fakta ina selingkuh dengan joni 
+
+  selingkuh(ina,budi). 
+  ** klausa fakta ina selingkuh dengan budi 
+
+  selingkuh(siti,joni). 
+  ** klausa fakta siti selingkuh dengan joni 
+
+  terbunuh_dengan(siti,pentungan).   
+  ** klausa fakta siti terbunuh dengan pentungan 
+
+  terbunuh(siti). 
+  ** klausa fakta siti terbunuh
+ 
+  motif(uang).   
+   ** klausa fakta uang sebagai motif
+
+  motif(cemburu).   
+   ** klausa fakta cemburu sebagai motif
+
+  motif(dendam). 
+   ** klausa fakta dendam sebagai motif
+ 
+  ternodai(budi, darah). 
+  *** klausa fakta budi ternodai darah
+
+  ternodai(siti, darah).   
+  ** klausa fakta siti ternodai darah
+  
+  ternodai(aldi, lumpur).   
+  ** klausa fakta aldi ternodai lumpur
+
+  ternodai(joni, coklat).   
+  ** klausa fakta joni ternodai coklat
+
+  ternodai(ina, coklat). 
+  ** klausa fakta ina ternodai coklat
+
+
+  milik(budi,kaki_palsu).  
+  ** klausa fakta budi memiliki kaki palsu 
+
+  milik(joni,pistol). 
+  ** klausa fakta joni memiliki pistol
+
+/* * * Basis Pengetahuan * * */ 
+ 
+  cara_kerja_mirip(kaki_palsu, pentungan).\
+   ** klausa fakta kaki palsu cara kerja mirip pentungan 
+
+  cara_kerja_mirip(balok, pentungan).   
+  ** klausa fakta balok cara kerja mirip pentungan 
+
+  cara_kerja_mirip(gunting, pisau).  
+  ** klausa fakta gunting cara kerja mirip pisau 
+
+  cara_kerja_mirip(sepatu_bola, pentungan).
+  ** klausa fakta sepatu bola cara kerja mirip pentungan  
+ 
+  kemungkinan_milik(X,sepatu_bola):-  
+                orang(X,_,_,pemain_sepak_bola). 
+                ** Visual prolog akan mencocokkan klausa ini untuk mengunifikasi argumennya. Karena X variabel bebas, maka X dapat diunifikasikan ke variabel manapun. Nama juga merupakan variabel bebas dari head rule kemungkinan_milik, maka terjadi unifikasi antara X dan nama, sehingga X=nama dan variable benda dari head rule kemungkinan_milik memiliki nilai sepatu bola.
+                **  Visual prolog mencocokkan subgoal dari kemungkinan_milik yaitu predicate orang. Argumen X merujuk pada nama, anonim (“_”) merujuk pada umur yang nilainya terserah , anonim (“_”) merujuk pada jender yang nilainya terserah, dan argumen pekerjaan harus berisi pemain_sepak_bola .
+                ** Visual prolog kemudian akan mencari kecocokan dari subgoal ini mulai dari bagian atas program hingga ke bagian bawah. bila tidak sesuai dengan syarat aturan, maka akan terjadi lacak balik.
+
+  kemungkinan_milik(X,gunting):-  
+                orang(X,_,_,pekerja_salon).  
+                ** Visual prolog akan mencocokkan klausa ini untuk mengunifikasi argumennya. Karena X variabel bebas, maka X dapat diunifikasikan ke variabel manapun. Nama juga merupakan variabel bebas dari head rule kemungkinan_milik, maka terjadi unifikasi antara X dan nama, sehingga X=nama dan variable benda dari head rule kemungkinan_milik memiliki nilai gunting.
+                **  Visual prolog mencocokkan subgoal dari kemungkinan_milik yaitu predicate orang. Argumen X merujuk pada nama, anonim (“_”) merujuk pada umur yang nilainya terserah, anonim (“_”) merujuk pada jender yang nilainya terserah, dan argumen pekerjaan harus berisi pekerja_salon . 
+                ** Visual prolog kemudian akan mencari kecocokan dari subgoal ini mulai dari bagian atas program hingga ke bagian bawah. bila tidak sesuai dengan syarat aturan, maka akan terjadi lacak balik.
+  
+  
+  kemungkinan_milik(X,Benda):-  
+                milik(X,Benda). 
+                ** Visual prolog akan mencocokkan klausa ini untuk mengunifikasi argumennya. Karena X variabel bebas, maka X dapat diunifikasikan ke variabel manapun. Nama juga merupakan variabel bebas dari head rule kemungkinan_milik, maka terjadi unifikasi antara X dan nama, sehingga X=nama dan variable benda dari head rule kemungkinan_milik memiliki nilai Benda.
+                **  Visual prolog mencocokkan subgoal dari kemungkinan_milik yaitu predicate milik. Argumen X merujuk pada nama, dan argumen benda harus berisi benda . 
+                ** Visual prolog kemudian akan mencari kecocokan dari subgoal ini mulai dari bagian atas program hingga ke bagian bawah. bila tidak sesuai dengan syarat aturan, maka akan terjadi lacak balik.
+ 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * dicurigai semua orang yang memiliki senjata yang kerjanya mirip dengan senjata penyebab siti terbunuh. *  * * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
+ 
+ dicurigai(X):-  
+              terbunuh_dengan(siti,Senjata) , 
+              ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu terbunuh_dengan(siti,Senjata), dan mencari pencocokan untuk panggilan ini. Kemudian Visual Prolog menset titik lacakbalik pada fakta terbunuh_dengan(siti,pentungan).
+
+              cara_kerja_mirip(Benda,Senjata) ,
+                  ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu cara_kerja_mirip(Benda,Senjata), dan mencari pencocokan untuk panggilan ini. Kemudian Visual Prolog menset titik lacakbalik pada fakta  cara_kerja_mirip(kaki_palsu, pentungan),cara_kerja_mirip(balok, pentungan),cara_kerja_mirip(sepatu_bola, pentungan).  
+
+              kemungkinan_milik(X,Benda).
+              ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu kemungkinan_milik(X,Benda), dan mencari pencocokan untuk panggilan ini. Pada titik ini X diikat dengan argumen nama dan benda bisa berisi kaki_palsu, balok, sepatu-bola. Kemudian Visual Prolog menset titik lacakbalik pada fakta kemungkinan_milik(budi,kaki_palsu).
+/* * * * * * * * * * * * * * * * * * * * * * * * * *
+* dicurigai laki-laki yang selingkuh dengan siti. *
+* * * * * * * * * * * * * * * * * * * * * * * * * */
+dicurigai(X):-
+          ** Nama juga merupakan variabel bebas dari head rule dicurigai, maka terjadi unifikasi antara X dan nama, sehingga X=nama.
+
+          motif(cemburu),
+          ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu  motif(cemburu), dan mencari pencocokan untuk panggilan ini. Pada titik ini argumen motif diikat dengan nilai cemburu. Kemudian Visual Prolog menset titik lacakbalik pada fakta motif(cemburu).
+
+          orang(X,_,m,_),
+          ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu orang(X,_,m,_), dan mencari pencocokan untuk panggilan ini. Pada titik ini X diikat dengan argumen nama, anonim (“_”) merujuk pada umur yang nilainya terserah, argumen jender diikat dengan nilai m , anonim (“_”) merujuk pada pekerjaan yang nilainya terserah. Kemudian Visual Prolog menset titik lacakbalik pada fakta orang(budi,55,m,tukang_kayu), orang(aldi,25,m,pemain_sepak_bola), orang(aldi,25,m,tukang_jagal), orang(joni,25,m,pencopet). 
+ 
+
+          selingkuh(siti,X).
+         ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu selingkuh(siti,X), dan mencari pencocokan untuk panggilan ini. Pada titik ini argumen nama diikat dengan nilai siti, X diikat dengan argumen nama, Kemudian Visual Prolog menset titik lacakbalik pada fakta selingkuh(siti,joni).
+/* * * * * * * * * * * * * * * * * * * * * * *
+* dicurigai perempuan yang selingkuh dengan *
+* laki-laki yang juga selingkuh dengan siti *
+* * * * * * * * * * * * * * * * * * * * * * */
+dicurigai(X):-
+         ** Nama juga merupakan variabel bebas dari head rule dicurigai, maka terjadi unifikasi antara X dan nama, sehingga X=nama.
+
+      motif(cemburu),
+      ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu  motif(cemburu), dan mencari pencocokan untuk panggilan ini. Pada titik ini argumen motif diikat dengan nilai cemburu. Kemudian Visual Prolog menset titik lacakbalik pada fakta motif(cemburu).
+
+      orang(X,_,f,_),
+       ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu orang(X,_,f,_), dan mencari pencocokan untuk panggilan ini. Pada titik ini X diikat dengan argumen nama, anonim (“_”) merujuk pada umur yang nilainya terserah, argumen jender diikat dengan nilai f , anonim (“_”) merujuk pada pekerjaan yang nilainya terserah. Kemudian Visual Prolog menset titik lacakbalik pada fakta orang(X,_,f,_),
+      selingkuh(X,Lakilaki),
+        ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu selingkuh(X,Lakilaki), dan mencari pencocokan untuk panggilan ini. Pada titik ini X diikat dengan argumen nama, argumen nama diikat dengan nilai lakilaki, Kemudian Visual Prolog menset titik lacakbalik pada fakta selingkuh(X,Lakilaki),
+
+      selingkuh(siti,Lakilaki).
+        ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu selingkuh(siti,Lakilaki), dan mencari pencocokan untuk panggilan ini. Pada titik ini argumen nama diikat dengan nilai siti, argumen nama diikat dengan nilai lakilaki, Kemudian Visual Prolog menset titik lacakbalik pada fakta selingkuh(siti,Lakilaki). 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+* dicurigai pencopet yang mempunyai motif uang. *
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+dicurigai(X):-
+      ** Nama juga merupakan variabel bebas dari head rule dicurigai, maka terjadi unifikasi antara X dan nama, sehingga X=nama.
+
+    motif(uang),
+     ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu  motif(uang), dan mencari pencocokan untuk panggilan ini. Pada titik ini argumen motif diikat dengan nilai uang. Kemudian Visual Prolog menset titik lacakbalik pada fakta motif(uang).
+
+    orang(X,_,_,pencopet).
+     ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu orang(X,_,_,pencopet), dan mencari pencocokan untuk panggilan ini. Pada titik ini X diikat dengan argumen nama, anonim (“_”) merujuk pada umur yang nilainya terserah, anonim (“_”) merujuk pada jender yang nilainya terserah, dan argumen pekerjaan yang diikat dengan nilai pencopet. Kemudian Visual Prolog menset titik lacakbalik pada fakta orang(joni,25,m,pencopet), 
+
+pembunuh(Pembunuh):-
+ **  Pertama kali Visual Prolog akan mencari fakta atau head dari rule yang cocok dengan goal, maka ditemukan pembunuh(Pembunuh) Kemudian mencari pada klausa tersebut untuk mengunifikasi argumennya. Karena X variabel bebas, maka X dapat diunifikasikan ke variabel manapun. pembunuh juga merupakan variabel bebas dari head rule pembunuh, maka terjadi unifikasi antara X dan pembunuh, sehingga X=Pembunuh.
+
+  orang(Pembunuh,_,_,_),
+  ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu orang(Pembunuh,_,_,_), dan mencari pencocokan untuk panggilan ini. Pada titik ini Pembunuh diikat dengan argumen nama, anonim (“_”) merujuk pada umur yang nilainya terserah, anonim (“_”) merujuk pada jender yang nilainya terserah, dan anonim (“_”) merujuk pada pekerjaan yang nilainya terserah. Kemudian Visual Prolog menset titik lacakbalik pada fakta orang.
+
+  terbunuh(Terbunuh),
+  ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu terbunuh(Terbunuh), dan mencari pencocokan untuk panggilan ini. Pada titik ini Terbunuh diikat dengan argumen nama, Kemudian Visual Prolog menset titik lacakbalik pada fakta terbunuh(siti).
+
+  Terbunuh <> Pembunuh, 
+  ** rule atau aturan bahwa solusi yang dicari bukan bunuh diri atau si terbunuh bukan pembunuh yang membunuh dirinya sendiri.
+
+  dicurigai(Pembunuh),
+    ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu dicurigai(Pembunuh),  dan mencari pencocokan untuk panggilan ini. Pada titik ini Pembunuh diikat dengan argumen nama. Kemudian Visual Prolog menset titik lacakbalik pada fakta dicurigai(Budi)
+
+  ternodai(Pembunuh,Zat),
+  ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu ternodai(Pembunuh,Zat), dan mencari pencocokan untuk panggilan ini. Pada titik ini Pembunuh diikat dengan argumen nama, dan Zat diikat dengan argumen zat.Kemudian Visual Prolog menset titik lacakbalik pada fakta ternodai(Budi,darah). 
+
+  ternodai(Terbunuh,Zat),
+  ** Visual Prolog memanggil subgoal yang  pada body dari rule tersebut yaitu ternodai(Terbunuh,Zat), dan mencari pencocokan untuk panggilan ini. Pada titik ini Terbunuh diikat dengan argumen nama, dan Zat diikat dengan argumen zat .Kemudian Visual Prolog menset titik lacakbalik pada fakta ternodai(siti,darah). 
+
+GOAL
+pembunuh(X).
+** pembunuh(X) menjadi acuan pencarian dan pencocokan pada klausa
+** di temukan satu solusi di manan X=budi. Budi adalah biang keroknya, akhirnya bisa ditemukan.
